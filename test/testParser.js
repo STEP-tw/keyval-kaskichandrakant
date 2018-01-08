@@ -256,7 +256,7 @@ describe("error handling", function() {
   });
 
   it("throws error on missing value when value is unquoted", function() {
-    chaiAssert.doesNotThrow(
+    chaiAssert.throws(
       () => {
         kvParser.parse("key=")
       },
@@ -264,7 +264,7 @@ describe("error handling", function() {
   });
 
   it("throws error on missing value when value is quoted", function() {
-    chaiAssert.doesNotThrow(
+    chaiAssert.throws(
       () => {
         kvParser.parse("key=\"value")
       },
@@ -272,7 +272,7 @@ describe("error handling", function() {
   });
 
   it("throws error on missing key", function() {
-    chaiAssert.doesNotThrow(
+    chaiAssert.throws(
       () => {
         var p = kvParser.parse("=value");
       },
@@ -280,7 +280,7 @@ describe("error handling", function() {
   });
 
   it("throws error on invalid key", function() {
-    chaiAssert.doesNotThrow(
+    chaiAssert.throws(
       () => {
         var p = kvParser.parse("'foo'=value");
       },
@@ -288,7 +288,7 @@ describe("error handling", function() {
   });
 
   it("throws error on missing assignment operator", function() {
-    chaiAssert.doesNotThrow(
+    chaiAssert.throws(
       () => {
         var p = kvParser.parse("key value");
       },
