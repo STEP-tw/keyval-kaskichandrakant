@@ -1,7 +1,6 @@
 const src=function(filePath){return "../src/"+filePath};
 const errors=function(filePath){return "../src/errors/"+filePath};
 
-
 const chaiAssert = require('chai').assert;
 const StrictParser=require(src('index.js')).StrictParser;
 const InvalidKeyError=require(errors('invalidKeyError.js'));
@@ -17,11 +16,12 @@ var invalidKeyErrorChecker=function(key,pos) {
 describe("strict parser",function(){
   it("should only parse keys that are specified for a single key",function(){
     let kvParser=new StrictParser(["name"]);
-    chaiAssert.doesNotThrow(
+    chaiAssert.throws(
       () => {
         var p=kvParser.parse("age=23");
       },
-      invalidKeyErrorChecker("age",5))
+      invalidKeyErrorChecker("age",5)(InvalidKeyError))
+
   });
 
   it("should only parse keys that are specified for multiple keys",function(){
@@ -29,65 +29,64 @@ describe("strict parser",function(){
     let actual=kvParser.parse("name=john age=23");
     let expected={name:"john",age:"23"};
     chaiAssert.deepOwnInclude(expected,actual);
-    chaiAssert.doesNotThrow(
+    chaiAssert.throws(
       () => {
         var p=kvParser.parse("color=blue");
       },
-      invalidKeyErrorChecker("color",9))
+      invalidKeyErrorChecker("color",9)(InvalidKeyError))
   });
 
   it("should throw an error when one of the keys is not valid",function(){
-    chaiAssert.doesNotThrow(
+    chaiAssert.throws(
       () => {
         let kvParser=new StrictParser(["name","age"]);
         kvParser.parse("name=john color=blue age=23");
       },
-      invalidKeyErrorChecker("color",20))
+      invalidKeyErrorChecker("color",20)(InvalidKeyError))
   });
 
   it("should throw an error on invalid key when there are spaces between keys and assignment operators",function(){
-    chaiAssert.doesNotThrow(
+    chaiAssert.throws(
       () => {
         let kvParser=new StrictParser(["name","age"]);
         kvParser.parse("color   = blue");
       },
-      invalidKeyErrorChecker("color",13))
+      invalidKeyErrorChecker("color",13)(InvalidKeyError))
   });
 
   it("should throw an error on invalid key when there are quotes on values",function(){
-    chaiAssert.doesNotThrow(
+    chaiAssert.throws(
       () => {
         let kvParser=new StrictParser(["name","age"]);
         kvParser.parse("color   = \"blue\"");
       },
-      invalidKeyErrorChecker("color",15))
+      invalidKeyErrorChecker("color",15)(InvalidKeyError))
   });
 
   it("should throw an error on invalid key when there are cases of both quotes and no quotes",function(){
-    chaiAssert.doesNotThrow(
+    chaiAssert.throws(
       () => {
         let kvParser=new StrictParser(["name","age"]);
         kvParser.parse("name = john color   = \"light blue\"");
       },
-      invalidKeyErrorChecker("color",33))
+      invalidKeyErrorChecker("color",33)(InvalidKeyError))
   });
 
   it("should throw an error when no valid keys are specified",function(){
-    chaiAssert.doesNotThrow(
+    chaiAssert.throws(
       () => {
         let kvParser=new StrictParser([]);
         kvParser.parse("name=john");
       },
-      invalidKeyErrorChecker("name",8))
+      invalidKeyErrorChecker("name",8)(InvalidKeyError))
   });
 
   it("should throw an error when no array is passed",function(){
-    chaiAssert.doesNotThrow(
+    chaiAssert.throws(
       () => {
         let kvParser=new StrictParser();
         kvParser.parse("name=john");
       },
-      invalidKeyErrorChecker("name",8))
+      invalidKeyErrorChecker("name",8)(InvalidKeyError))
   });
-
 });

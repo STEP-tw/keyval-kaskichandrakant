@@ -1,6 +1,5 @@
 const src=function(filePath){return "../src/"+filePath};
 const errors=function(filePath){return "../src/errors/"+filePath};
-
 const chaiAssert=require('chai').assert;
 const Parser=require(src('index.js')).Parser;
 const MissingValueError=require(errors('missingValueError.js'));
@@ -215,7 +214,7 @@ describe("error handling",function(){
       () => {
         kvParser.parse("key=")
       },
-      errorChecker("key",3,MissingValueError))
+      errorChecker("key",3,MissingValueError)());
   });
 
   it("throws error on missing value when value is quoted",function(){
@@ -223,8 +222,7 @@ describe("error handling",function(){
       () => {
         kvParser.parse("key=\"value")
       },
-      errorChecker("key",9,MissingEndQuoteError)
-    )
+      errorChecker("key",9,MissingEndQuoteError)());
   });
 
   it("throws error on missing key",function(){
@@ -232,8 +230,7 @@ describe("error handling",function(){
       () => {
         var p=kvParser.parse("=value");
       },
-      errorChecker(undefined,0,MissingKeyError)
-    )
+      errorChecker(undefined,0,MissingKeyError)());
   });
 
   it("throws error on invalid key",function(){
@@ -241,8 +238,7 @@ describe("error handling",function(){
       () => {
         var p=kvParser.parse("'foo'=value");
       },
-      errorChecker(undefined,0,MissingKeyError)
-    )
+      errorChecker(undefined,0,MissingKeyError)());
   });
 
   it("throws error on missing assignment operator",function(){
@@ -250,17 +246,15 @@ describe("error handling",function(){
       () => {
         var p=kvParser.parse("key value");
       },
-      errorChecker(undefined,4,MissingAssignmentOperatorError)
-    )
+      errorChecker(undefined,4,MissingAssignmentOperatorError)(MissingAssignmentOperatorError));
   });
 
   it("throws error on incomplete key value pair",function(){
-    chaiAssert.doesNotThrow(
+    chaiAssert.throws(
       () => {
         var p=kvParser.parse("key");
       },
-      errorChecker(undefined,2,IncompleteKeyValuePairError)
-    )
+      errorChecker(undefined,2,IncompleteKeyValuePairError)());
   });
 
 });
