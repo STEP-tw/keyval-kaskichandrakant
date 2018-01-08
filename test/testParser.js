@@ -1,7 +1,6 @@
 const src=function(filePath){return "../src/"+filePath};
 const errors=function(filePath){return "../src/errors/"+filePath};
 
-//const assert=require('assert');
 const chaiAssert=require('chai').assert;
 const Parser=require(src('index.js')).Parser;
 const MissingValueError=require(errors('missingValueError.js'));
