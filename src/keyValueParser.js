@@ -10,7 +10,6 @@ Parser.prototype = {
   parse:function(text) {
     var parseInfo=this.parseInfoCreator(this.ignoreLeadingWhiteSpace);
     var parsedKeys={};
-
     for (var i = 0; i < text.length; i++) {
       this.f=parseInfo.nextFunction;
       parseInfo.incrementPosition();
@@ -90,7 +89,7 @@ Parser.prototype = {
       throw new MissingKeyError(parseInfo.currentPos);
     }
     return parseInfo;
-  },
+  }
 }
 
 var isWhiteSpace=function(character) {
